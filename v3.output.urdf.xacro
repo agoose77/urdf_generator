@@ -1,0 +1,24 @@
+<xacro:property name="radius" value="0.56"/>
+
+<link name="test1">
+   <visual>
+     <geometry>
+       <box size="0.6 0.3 0.2"/>
+     </geometry>
+     <material name="green">
+       <color rgba="0.5 0.5 1 0.5"/>
+     </material>
+   </visual>
+ </link>
+
+
+<link name="test2">
+   <visual>
+     <geometry>
+       <box size="0.6 0.3 0.2"/>
+     </geometry>
+     <material name="green">
+       <color rgba="0.5 0.5 1 0.5"/>
+     </material>
+   </visual>
+ </link>

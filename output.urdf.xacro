@@ -1,26 +1,13 @@
-<?xml version="1.0" ?>
-<robot>
-    
-  <link name="test1">
-    <visual>
-      <geometry>
-        <box rpy="0.5 0.5 0.5" size="0.5 0.8 0.1"/>
-      </geometry>
-      <material name="red">
-        <color rgba="0.5 0.5 0.5 1"/>
-      </material>
-    </visual>
-  </link>
-   
-  <link name="test2">
-    <visual>
-      <geometry>
-        <box size="0.6 0.3 0.2"/>
-      </geometry>
-      <material name="green">
-        <color rgba="0.5 0.5 0.5 1"/>
-      </material>
-    </visual>
-  </link>
-    
-</robot>
+<xacro:property name="radius" value="0.56"/>
+
+			<link name="test1">
+   				<visual>
+     				<geometry>
+       					<box size="0.6 0.3 0.2"/>
+     				</geometry>
+     				<material name="green">
+      					<color rgba="0.1 0.3 0.2"/>
+     				</material>
+   				</visual>
+ 			</link>
+			
