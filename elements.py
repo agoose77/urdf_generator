@@ -12,7 +12,10 @@ class File:
     Raises:
        	No Error yet
     """
-	def __init__(self, *objects, filename='example.urdf.xacro'):
+	def __init__(self, 
+				*objects, 
+				filename='example.urdf.xacro'):
+	
 		self.objects = objects
 		self.xml = []
 		self.filename = filename
@@ -47,7 +50,14 @@ class Link:
     Raises:
        	No Error yet
     """
-	def __init__(self, typ, name, rgba, size, color, rpy='0 0 0'):
+	def __init__(self, 
+				typ, 
+				name, 
+				rgba, 
+				size, 
+				color, 
+				rpy='0 0 0'):
+
 		self.rpy = rpy
 		self.type = typ
 		self.name = name
@@ -69,9 +79,9 @@ class Link:
 				'    <geometry>',
 				'      <%s size="%s" rpy="%s"/>' 	% (self.type, self.size, self.rpy),
 				'    </geometry>',
-				'	<material name="%s">' 	% self.color,
-				'	  <color rgba="%s"/>' % self.rgba,
-				'	</material>',
+				'	  <material name="%s">' 	% self.color,
+				'	    <color rgba="%s"/>' % self.rgba,
+				'	  </material>',
 				'  </visual>',
 				'</link>\n'
 			])
@@ -79,7 +89,14 @@ class Link:
 		return xml
 
 class Joint:
-	def __init__(self, name, typ, parent, child, xyz, rpy='0 0 0'):
+	def __init__(self, 
+				name, 
+				typ, 
+				parent, 
+				child, 
+				xyz, 
+				rpy='0 0 0'):
+
 		self.name = name
 		self.type = typ
 		self.parent = parent
