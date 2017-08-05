@@ -78,28 +78,25 @@ class Link:
 
 		return xml
 
-	# ISSUE textwrap.dedent does not result in removed whitespaces!
-	# def xmlify(self):
-	# 	xml = '''
- 	# 	<link name="%s">
-	# 	  <visual>
-	# 		<geometry>
-	# 		  <%s size="%s" rpy="%s"/>
-	# 		</geometry>
-	# 		<material name="%s">
-	# 		  <color rgba="%s"/>
-	# 		</material>
-	# 	  </visual>
-	# 	</link>
-	# 	''' % (	self.name, self.type, self.size, \
-	# 			self.rpy, self.color, self.rgba
-	# 				)
+class Joint:
+	def __init__(self, name, typ, parent, child, xyz, rpy='0 0 0'):
+		self.name = name
+		self.type = typ
+		self.parent = parent
+		self.child = child
+		self.xyz = xyz
+		self.rpy = rpy
+		self.element = self.xmlify()
 
-	# 	return textwrap.dedent(xml)
+	def xmlify(self):
+		xml = '\n'.join([
+			'\n<joint name="%s">' % self.name,
+			'  <parent link="%s"/>' % self.parent,
+			'  <child link="%s"/>' % self.child,
+			'  <origin xyz="%s" rpy="%s"/>' % (self.xyz, self.rpy),
+			'</joint>\n'
+			])
 
-xml = File(
-		Property('radius', '0.56'),
-		Link('box', 'body', '0.5 0.7 0.1 1', '0.4 5 4', 'red')
-	)
+		return xml
 
-xml.save()
+
