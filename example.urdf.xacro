@@ -10,3 +10,9 @@
 	</material>
   </visual>
 </link>
+
+<joint name="joint1">
+  <parent link="joint4"/>
+  <child link="jointparent"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
