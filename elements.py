@@ -79,9 +79,9 @@ class Link(Field):
 				'    <geometry>',
 				'      <%s size="%s" rpy="%s"/>' 	% (self.type, self.size, self.rpy),
 				'    </geometry>',
-				'	<material name="%s">' 	% self.color,
-				'	  <color rgba="%s"/>' % self.rgba,
-				'	</material>',
+				'	  <material name="%s">' 	% self.color,
+				'	    <color rgba="%s"/>' % self.rgba,
+				'	  </material>',
 				'  </visual>',
 				'</link>\n'
 			])
