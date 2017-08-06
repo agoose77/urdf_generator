@@ -1,4 +1,5 @@
 import elements as em
+import check as ch 
 
 radius = em.Xacro_Property('radius', 0.56)
 diameter = em.Xacro_Property('diameter', radius.name ,' * 2', True)
@@ -14,5 +15,7 @@ xml = em.File(
 		box,
 		joint
 	)
+
+# ch.check(xml)
 
 xml.save()
