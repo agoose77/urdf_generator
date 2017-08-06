@@ -15,30 +15,55 @@ class File:
 	def __init__(self, 
 				*objects, 
 				filename='example.urdf.xacro'):
-	
+
+		# Experimental, not sure what to do about base_footprint location
 		self.objects = objects
-		self.xml = []
+		self.base = '\n'.join([
+					'<?xml version="1.0" ?>',
+					'<robot>\n\n',
+				])
+					
+		self.base_footprint = '\n<link name="base_footprint"/>\n'
+		self.end = '\n</robot>'
 		self.filename = filename
 
 	def __complete_xml(self):
 		self.xml.insert(0, '<?xml version="1.0" ?>')
 		self.xml.insert(0, '<robot>')
+		self.xml.insert(0, '<link name="base_footprint"/>')
 		self.xml.insert(len(self.xml), '</robot>')
 		return self.xml
 
 	def save(self):
+		footprint_set = False
+
 		with open(self.filename, "w") as f:
+			
+			f.write(self.base)
+			
 			for key, val in enumerate(self.objects):
+
+				if isinstance(val, Link) and footprint_set is False:
+					f.write(self.base_footprint)
+					footprint_set = True
+
 				f.write(val.element)
+
+			f.write(self.end)
 
 		print("\t-- Success -- \nSaved to %s" % self.filename)
 		f.close()
 
-class Property:
+class Xacro_Property:
 	def __init__(self, name, value):
 		self.name = name
 		self.value = value
 		self.element = '<xacro:property name="%s" value="%s"/>\n' % (self.name, self.value)
+
+class Xacro_Include:
+	def __init__(self, filename):
+		self.filename = filename
+		self.element = '\n<xacro:include filename="%s"/>\n' % self.filename
 
 class Link:
 	"""Create 'link' urdf element.
@@ -104,6 +129,9 @@ class Joint:
 		self.xyz = xyz
 		self.rpy = rpy
 		self.element = self.xmlify()
+
+	def say(self, text):
+		print(text)
 
 	def xmlify(self):
 		xml = '\n'.join([
