@@ -1,5 +1,6 @@
 # This is a script to generate URDF models for ROS simulation in rviz
 # Maintainer: Julian Gaal github.com/juliangaal
+
 import textwrap
 
 class File:
@@ -27,7 +28,10 @@ class File:
 		self.end = '\n</robot>'
 		self.filename = filename
 
-	def __complete_xml(self):
+	def objects(self):
+		return self.objects
+
+	def complete_xml(self):
 		self.xml.insert(0, '<?xml version="1.0" ?>')
 		self.xml.insert(0, '<robot>')
 		self.xml.insert(0, '<link name="base_footprint"/>')
@@ -55,12 +59,31 @@ class File:
 		f.close()
 
 class Xacro_Property:
+	"""Create 'xacro:property' urdf element.
+
+    Args:
+        name: property name.
+        value: property value.
+        operation: math operation to be evaluated
+        evaluate: evalutes ${...} elements
+
+    Raises:
+       	No Error yet
+    """
 	def __init__(self, name, value, operation=None, evaluate=False):
 		self.name = name
 		self.value = value if evaluate is False else '${%s%s}' % (value, operation)
 		self.element = '<xacro:property name="%s" value="%s"/>\n' % (self.name, self.value)
 
 class Xacro_Include:
+	"""Create 'xacro:include' urdf element.
+
+    Args:
+        filename: location on local drive.
+
+    Raises:
+       	No Error yet
+    """
 	def __init__(self, filename):
 		self.filename = filename
 		self.element = '\n<xacro:include filename="%s"/>\n' % self.filename
@@ -114,6 +137,19 @@ class Link:
 		return xml
 
 class Joint:
+	"""Create 'joint' urdf element.
+
+    Args:
+        name: joint name.
+        type: fixed, continuous.
+        parent: parent link
+        child: child link
+        xyz: position
+        rpy: rotation
+
+    Raises:
+       	No Error yet
+    """
 	def __init__(self, 
 				name, 
 				typ, 
@@ -143,5 +179,3 @@ class Joint:
 			])
 
 		return xml
-
-
