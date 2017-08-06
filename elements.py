@@ -23,19 +23,40 @@ class File:
     """
 	def __init__(self, filename='example.urdf.xacro', **objects):
 		self.objects = objects
-		self.xml = []
+		self.base = '\n'.join([
+					'<?xml version="1.0" ?>',
+					'<robot>\n\n',
+				])
+
+		self.base_footprint = '\n<link name="base_footprint"/>\n'
+		self.end = '\n</robot>'
 		self.filename = filename
 
 	def __complete_xml(self):
 		self.xml.insert(0, '<?xml version="1.0" ?>')
 		self.xml.insert(0, '<robot>')
+		self.xml.insert(0, '<link name="base_footprint"/>')
 		self.xml.insert(len(self.xml), '</robot>')
 		return self.xml
 
 	def save(self):
+		footprint_set = False
+
 		with open(self.filename, "w") as f:
 			for name, field in self.objects.items():
 				f.write(field.to_xml(name))
+
+			f.write(self.base)
+
+			for key, val in enumerate(self.objects):
+
+				if isinstance(val, Link) and footprint_set is False:
+					f.write(self.base_footprint)
+					footprint_set = True
+
+				f.write(val.element)
+
+			f.write(self.end)
 
 		print("\t-- Success -- \nSaved to %s" % self.filename)
 		f.close()
@@ -47,6 +68,14 @@ class Property(Field):
 
 	def to_xml(self, name):
 		return '<xacro:property name="%s" value="%s"/>\n' % (name, self.value)
+
+
+class Xacro_Include:
+	def __init__(self, filename):
+		self.filename = filename
+
+    def to_xml(self, name):
+		return'\n<xacro:include filename="%s"/>\n' % self.filename
 
 
 class Link(Field):
@@ -95,6 +124,9 @@ class Joint(Field):
 		self.child = child
 		self.xyz = xyz
 		self.rpy = rpy
+
+    def say(self, text):
+        print(text)
 
 	def to_xml(self, name):
 		xml = '\n'.join([
