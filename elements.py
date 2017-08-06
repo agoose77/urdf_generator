@@ -55,9 +55,9 @@ class File:
 		f.close()
 
 class Xacro_Property:
-	def __init__(self, name, value):
+	def __init__(self, name, value, operation=None, evaluate=False):
 		self.name = name
-		self.value = value
+		self.value = value if evaluate is False else '${%s%s}' % (value, operation)
 		self.element = '<xacro:property name="%s" value="%s"/>\n' % (self.name, self.value)
 
 class Xacro_Include:
