@@ -46,7 +46,7 @@ class Property(Field):
 		self.value = value
 
 	def to_xml(self, name):
-		return '<xacro:property name="%s" value="%s"/>' % (name, self.value)
+		return '<xacro:property name="%s" value="%s"/>\n' % (name, self.value)
 
 
 class Link(Field):
@@ -89,8 +89,8 @@ class Link(Field):
 		return xml
 
 class Joint(Field):
-	def __init__(self, typ, parent, child, xyz, rpy='0 0 0'):
-		self.type = typ
+	def __init__(self, type_, parent, child, xyz, rpy='0 0 0'):
+		self.type = type_
 		self.parent = parent
 		self.child = child
 		self.xyz = xyz
