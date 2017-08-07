@@ -1,5 +1,4 @@
 <xacro:property name="radius" value="0.56"/>
-
 <link name="body">
   <visual>
     <geometry>

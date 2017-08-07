@@ -1,6 +1,15 @@
 # This is a script to generate URDF models for ROS simulation in rviz
 # Maintainer: Julian Gaal github.com/juliangaal
 import textwrap
+from abc import ABC, abstractmethod
+
+
+class Field(ABC):
+
+	@abstractmethod
+	def to_xml(self, name):
+		raise NotImplementedError
+
 
 class File:
 	"""Create XML file for ROS urdf model.
@@ -12,7 +21,7 @@ class File:
     Raises:
        	No Error yet
     """
-	def __init__(self, *objects, filename='example.urdf.xacro'):
+	def __init__(self, filename='example.urdf.xacro', **objects):
 		self.objects = objects
 		self.xml = []
 		self.filename = filename
@@ -25,19 +34,22 @@ class File:
 
 	def save(self):
 		with open(self.filename, "w") as f:
-			for key, val in enumerate(self.objects):
-				f.write(val.element)
+			for name, field in self.objects.items():
+				f.write(field.to_xml(name))
 
 		print("\t-- Success -- \nSaved to %s" % self.filename)
 		f.close()
 
-class Property:
-	def __init__(self, name, value):
-		self.name = name
-		self.value = value
-		self.element = '<xacro:property name="%s" value="%s"/>\n' % (self.name, self.value)
+class Property(Field):
 
-class Link:
+	def __init__(self, value):
+		self.value = value
+
+	def to_xml(self, name):
+		return '<xacro:property name="%s" value="%s"/>' % (name, self.value)
+
+
+class Link(Field):
 	"""Create 'link' urdf element.
 
     Args:
@@ -47,14 +59,12 @@ class Link:
     Raises:
        	No Error yet
     """
-	def __init__(self, typ, name, rgba, size, color, rpy='0 0 0'):
+	def __init__(self, type_, rgba, size, color, rpy='0 0 0'):
 		self.rpy = rpy
-		self.type = typ
-		self.name = name
+		self.type = type_
 		self.rgba = rgba
 		self.size = size
 		self.color = color
-		self.element = self.xmlify()
 		
 	# Formatting options, see http://tinyurl.com/y9vohsxz
 
@@ -62,9 +72,9 @@ class Link:
 	# \n\t\t<material name="green">\n\t\t\t<color rgba="0.1 0.3 0.2"/>\n\t\t</material>\n\t</visual>\n</link>''
 
 	# ISSUE: String after closing brackets of material need to be indented one space more. wtf
-	def xmlify(self):
+	def to_xml(self, name):
 		xml = '\n'.join([
-				'\n<link name="%s">' % self.name,
+				'\n<link name="%s">' % name,
 				'  <visual>',
 				'    <geometry>',
 				'      <%s size="%s" rpy="%s"/>' 	% (self.type, self.size, self.rpy),
@@ -78,19 +88,17 @@ class Link:
 
 		return xml
 
-class Joint:
-	def __init__(self, name, typ, parent, child, xyz, rpy='0 0 0'):
-		self.name = name
+class Joint(Field):
+	def __init__(self, typ, parent, child, xyz, rpy='0 0 0'):
 		self.type = typ
 		self.parent = parent
 		self.child = child
 		self.xyz = xyz
 		self.rpy = rpy
-		self.element = self.xmlify()
 
-	def xmlify(self):
+	def to_xml(self, name):
 		xml = '\n'.join([
-			'\n<joint name="%s">' % self.name,
+			'\n<joint name="%s">' % name,
 			'  <parent link="%s"/>' % self.parent,
 			'  <child link="%s"/>' % self.child,
 			'  <origin xyz="%s" rpy="%s"/>' % (self.xyz, self.rpy),
